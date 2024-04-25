@@ -1,3 +1,9 @@
+# Simple psf simulation where psf profile is a 2D Gaussian
+# with ellipticity, shift and size parameters. The PSF is not
+# on a grid, but is evaluated at a set of points. The PSF is
+# normalized to have a total flux of 1.
+
+
 import numpy as np
 import pickle
 
