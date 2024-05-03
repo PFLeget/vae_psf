@@ -105,9 +105,9 @@ def make_mock_gaussian_psf(n_psfs=1000, n_pixel=16,
 
     return psfs, x, y, size, e1, e2
 
-def make_mock(file_out='mock.pkl',
-              plot_mock=False,
-              **kwargs):
+def make_mock_simple(file_out='mock.pkl',
+                     plot_mock=False,
+                     **kwargs):
     """
     Generates a mock dataset of PSFs using the specified parameters.
 
@@ -120,8 +120,8 @@ def make_mock(file_out='mock.pkl',
     None
 
     Example usage:
-    make_mock(file_out='mock.pkl', plot_mock=True, n_psfs=1000, n_pixel=16,
-              mean_size=3, std_size=0.2, mean_e1=0, std_e1=0.3, mean_e2=0, std_e2=0.3)
+    make_mock_simple(file_out='mock.pkl', plot_mock=True, n_psfs=1000, n_pixel=16,
+                     mean_size=3, std_size=0.2, mean_e1=0, std_e1=0.3, mean_e2=0, std_e2=0.3)
     """
     psfs, x, y, size, e1, e2 = make_mock_gaussian_psf(**kwargs)
 
