@@ -7,7 +7,8 @@ import torch.optim as optim
 import time
 from .loss import VAELoss
 from .models import VAE
-import pickle
+import tqdm
+# import pickle
 
 def load_train_data(data, train_ratio=0.8, batch_size=64, device='cpu'):
     """
@@ -50,60 +51,50 @@ def load_train_data(data, train_ratio=0.8, batch_size=64, device='cpu'):
 
 class training_loop:
 
-    def __init__(self, vae_model, train_loader, val_loader, device='cpu', lr=1e-3, epochs=20):
+    def __init__(self, vae_model, train_loader, val_loader, device='cpu', lr=1e-3):
 
         self.vae_model = vae_model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.device = device
         self.lr = lr
-        self.epochs = epochs
         self.vae_loss = VAELoss().to(device)
         self.optimizer = optim.Adam(self.vae_model.parameters(), lr=self.lr)
         self.train_size = len(self.train_loader.dataset)
         self.epochs = 20
         self.total_loss = []
         self.val_loss = []
+
+    def train_loop(self, epochs=20):
     
+        for epoch in tqdm(epochs):
+            running_loss = 0.0
+            for x, in self.train_loader:
+                # Zero the gradients
+                self.optimizer.zero_grad()
+                # Forward pass
+                x_hat, mu, log_var = self.vae_model(x)
+                loss = self.vae_loss(x, x_hat, mu, log_var)
 
-def training_loop(vae_model, train_loader, val_loader, device='cpu'):
+                # Backward pass and optimization
+                loss.backward()
+                self.optimizer.step()
+                # Add the mini-batch loss to the running loss
+                running_loss += loss.item()
 
+            for x_val, in self.val_loader:
+                #x_hat_val, mu_val, log_var_val = vae(x_val)
+                x_hat_val, mu_val, log_var_val = self.vae_model.forward(x_val, repam=False)
+                vloss = self.vae_loss(x_val, x_hat_val, mu_val, log_var_val)
+                self.val_loss.append(vloss.item())
 
-    epochs = 20
-    total_loss = []
-    val_loss = []
+            # Compute the average loss for the epoch
+            epoch_loss = running_loss
+            self.total_loss.append(epoch_loss)
 
-    TIMEA = time.time()
+            # Print the average loss for the epoch
+            print(f"Epoch {epoch+1} loss: {epoch_loss:.6f} validation loss: {vloss:.6f}")
 
-    print('start')
-    for epoch in range(epochs):
-        running_loss = 0.0
-        for x, in train_loader:
-            # Zero the gradients
-            optimizer.zero_grad()
-            # Forward pass
-            x_hat, mu, log_var = vae(x)
-            loss = vae_loss(x, x_hat, mu, log_var)
+    def save_model(self, path):
+        torch.save(self.vae_model.state_dict(), path)
 
-            # Backward pass and optimization
-            loss.backward()
-            optimizer.step()
-            # Add the mini-batch loss to the running loss
-            running_loss += loss.item()
-
-        for x_val, in val_loader:
-            #x_hat_val, mu_val, log_var_val = vae(x_val)
-            x_hat_val, mu_val, log_var_val = vae.forward(x_val, repam=False)
-            vloss = vae_loss(x_val, x_hat_val, mu_val, log_var_val)
-            val_loss.append(vloss.item())
-
-        # Compute the average loss for the epoch
-        epoch_loss = running_loss
-        total_loss.append(epoch_loss)
-
-        # Print the average loss for the epoch
-        print(f"Epoch {epoch+1} loss: {epoch_loss:.6f} validation loss: {vloss:.6f}")
-
-TIMEB = time.time()
-
-print(TIMEB-TIMEA)
