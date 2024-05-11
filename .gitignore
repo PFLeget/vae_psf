@@ -1,1 +1,2 @@
-psf_simulation/*.pkl
+vae_psf.egg-info/
+vae_psf/psf_simulation/*.pkl
