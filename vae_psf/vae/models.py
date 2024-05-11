@@ -14,7 +14,7 @@ def size_convt_out(in_pixel, kernel_size, padding=0, stride=1.):
 
 
 class VAE(nn.Module):
-    def __init__(self, N_pixel=16*16, layers_n_hidden_units=[128, 64, 32], latent_dim=4):
+    def __init__(self, N_pixel=16*16, layers_n_hidden_units=[128, 64, 32], latent_dim=4, device='cpu'):
         super(VAE, self).__init__()
 
         self._npixel = N_pixel
@@ -66,7 +66,10 @@ class VAE(nn.Module):
         # I += 1
         # self.model_decode.add_module(str(I), nn.Sigmoid())
         print(self.model_decode)
-        self.N = torch.distributions.Normal(0, 1)
+
+        mean = torch.tensor(0.0).to(device)
+        std = torch.tensor(1.0).to(device)
+        self.N = torch.distributions.Normal(mean, std)
 
     def encoder(self, x):
         h = self.model_encode(x)

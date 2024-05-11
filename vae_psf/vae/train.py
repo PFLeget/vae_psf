@@ -7,7 +7,7 @@ import torch.optim as optim
 import time
 from .loss import VAELoss
 from .models import VAE
-import tqdm
+
 # import pickle
 
 def load_train_data(data, train_ratio=0.8, batch_size=64, device='cpu'):
@@ -67,7 +67,7 @@ class training_loop:
 
     def train_loop(self, epochs=20):
     
-        for epoch in tqdm(epochs):
+        for epoch in range(epochs):
             running_loss = 0.0
             for x, in self.train_loader:
                 # Zero the gradients

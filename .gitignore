@@ -1,2 +1,7 @@
 vae_psf.egg-info/
 vae_psf/psf_simulation/*.pkl
+vae_psf/.ipynb_checkpoints/
+vae_psf/__pycache__/
+vae_psf/local_data/
+vae_psf/psf_simulation/__pycache__/
+vae_psf/vae/__pycache__/

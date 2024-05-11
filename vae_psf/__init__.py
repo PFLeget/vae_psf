@@ -3,5 +3,5 @@ from .vae.models import VAE
 from .vae.loss import VAELoss
 from .vae.models import ConvVAE
 from .vae.train import load_train_data, training_loop
-from .vae.utils import size_conv_out, size_convt_out
+from .vae.models import size_conv_out, size_convt_out
 
